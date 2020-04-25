@@ -1,7 +1,7 @@
 // eslint-env jest
 import { denormalizeSimple as denormalize } from '../denormalize';
 import { normalize, schema } from '../';
-import Entity from '../entities/Entity';
+import NestingEntity from '../entities/NestingEntity';
 import IDEntity from '../entities/IDEntity';
 
 class Tacos extends IDEntity {
@@ -232,7 +232,7 @@ describe('normalize', () => {
     class Children extends IDEntity {
       name = '';
     }
-    class MyEntity extends Entity {
+    class MyEntity extends NestingEntity {
       uuid = '';
       name = '';
 
@@ -281,7 +281,7 @@ describe('normalize', () => {
   test('uses the non-normalized input when getting the ID for an entity', () => {
     const calls = [];
     class User extends IDEntity {}
-    class Recommendations extends Entity {
+    class Recommendations extends NestingEntity {
       pk(parent, key) {
         calls.push([this, parent, key]);
         return parent.user.id;
@@ -565,7 +565,7 @@ describe('denormalize', () => {
       result: ['1', '2'],
     };
 
-    class Guest extends Entity {
+    class Guest extends NestingEntity {
       guestId = '';
       pk(parent, key) {
         return `${key}-${parent.id}-${this.guestId}`;

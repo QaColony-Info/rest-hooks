@@ -3,7 +3,7 @@
 exports[`denormalize denormalizes arrays with objects inside 1`] = `
 Array [
   Object {
-    "data": Object {
+    "data": Tacos {
       "id": 1,
       "type": "foo",
     },
@@ -13,11 +13,11 @@ Array [
 
 exports[`denormalize denormalizes entities 1`] = `
 Array [
-  Object {
+  Tacos {
     "id": 1,
     "type": "foo",
   },
-  Object {
+  Tacos {
     "id": 2,
     "type": "bar",
   },
@@ -27,7 +27,7 @@ Array [
 exports[`denormalize denormalizes ignoring unfound entities in arrays 1`] = `
 Array [
   Array [
-    Object {
+    Tacos {
       "id": 1,
       "type": "foo",
     },
@@ -40,7 +40,7 @@ exports[`denormalize denormalizes ignoring unfound entities in arrays 2`] = `
 Array [
   Object {
     "results": Array [
-      Object {
+      Tacos {
         "id": 1,
         "type": "foo",
       },
@@ -52,11 +52,21 @@ Array [
 
 exports[`denormalize denormalizes nested entities 1`] = `
 Array [
-  Object {
-    "author": "8472",
+  Article {
+    "author": User {
+      "id": "8472",
+      "name": "Paul",
+    },
     "body": "This article is great.",
     "comments": Array [
-      "comment-123-4738",
+      Comment {
+        "comment": "I like it!",
+        "id": "comment-123-4738",
+        "user": User {
+          "id": "10293",
+          "name": "Jane",
+        },
+      },
     ],
     "id": "123",
     "title": "A Great Article",
@@ -69,11 +79,11 @@ exports[`denormalize denormalizes schema with extra members 1`] = `
 Array [
   Object {
     "data": Array [
-      Object {
+      Tacos {
         "id": 1,
         "type": "foo",
       },
-      Object {
+      Tacos {
         "id": 2,
         "type": "bar",
       },
@@ -99,11 +109,11 @@ exports[`denormalize denormalizes schema with extra members but not set 1`] = `
 Array [
   Object {
     "data": Array [
-      Object {
+      Tacos {
         "id": 1,
         "type": "foo",
       },
-      Object {
+      Tacos {
         "id": 2,
         "type": "bar",
       },
@@ -116,13 +126,15 @@ Array [
 exports[`denormalize denormalizes with function as idAttribute 1`] = `
 Array [
   Array [
-    Object {
+    Patron {
       "guest": null,
       "id": "1",
       "name": "Esther",
     },
-    Object {
-      "guest": "guest-2-1",
+    Patron {
+      "guest": Guest {
+        "guestId": 1,
+      },
       "id": "2",
       "name": "Tom",
     },
@@ -142,12 +154,12 @@ Array [
 
 exports[`denormalize set to undefined if schema key is not in entities 1`] = `
 Array [
-  Object {
-    "author": "8472",
-    "comments": Array [
-      "1",
-    ],
+  Article {
+    "author": undefined,
+    "body": "",
+    "comments": Array [],
     "id": "123",
+    "title": "",
   },
   true,
 ]

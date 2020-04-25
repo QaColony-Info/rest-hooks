@@ -3,7 +3,7 @@ import * as ArrayUtils from './schemas/Array';
 import * as ObjectUtils from './schemas/Object';
 import { Denormalize, DenormalizeNullable, Schema } from './types';
 import SimpleRecord from './entities/SimpleRecord';
-import { isEntity } from './entities/Entity';
+import Entity, { isEntity } from './entities/Entity';
 
 const unvisitEntity = (
   id: any,
@@ -24,15 +24,15 @@ const unvisitEntity = (
   let found = true;
   if (!cache[schema.key][id]) {
     // Ensure we don't mutate it non-immutable objects
-    const entityCopy =
+    /*const entityCopy =
       ImmutableUtils.isImmutable(entity) || entity instanceof SimpleRecord
         ? entity
-        : { ...entity };
+        : { ...entity };*/
 
     // Need to set this first so that if it is referenced further within the
     // denormalization the reference will already exist.
-    cache[schema.key][id] = entityCopy;
-    [cache[schema.key][id], found] = schema.denormalize(entityCopy, unvisit);
+    cache[schema.key][id] = entity;
+    [cache[schema.key][id], found] = schema.denormalize(entity, unvisit);
   }
 
   return [cache[schema.key][id], found];
@@ -82,7 +82,7 @@ const getUnvisit = (entities: Record<string, any>) => {
 const getEntities = (entities: Record<string, any>) => {
   const isImmutable = ImmutableUtils.isImmutable(entities);
 
-  return (entityOrId: any, schema: any) => {
+  return (entityOrId: Record<string, any> | string, schema: typeof Entity) => {
     const schemaKey = schema.key;
 
     if (typeof entityOrId === 'object') {
@@ -90,7 +90,7 @@ const getEntities = (entities: Record<string, any>) => {
     }
 
     if (isImmutable) {
-      return entities.getIn([schemaKey, entityOrId.toString()]);
+      return entities.getIn([schemaKey, entityOrId]);
     }
 
     return entities[schemaKey] && entities[schemaKey][entityOrId];
